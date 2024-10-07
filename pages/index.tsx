@@ -4,10 +4,12 @@ import Link from 'next/link'
 
 export default function page({ appTitle }) {
     const [data, setData] = useState<Data[]>([])
-    const [error, setError] = useState('')
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string>('')
 
     const getData = (event: React.FormEvent) => {
         event.preventDefault()
+        setIsLoading(true)
 
         const formData = new FormData(event.currentTarget as HTMLFormElement)
 
@@ -20,19 +22,30 @@ export default function page({ appTitle }) {
         )
 
         fetch(
-            (process.env.NEXT_PUBLIC_API_URL).concat('?').concat(queryParams.join('&'))
-        )
+            (process.env.NEXT_PUBLIC_API_URL)
+            .concat('?')
+            .concat('length=50')
+            .concat('&')
+            .concat('sort-by=_id')
+            .concat('&')
+            .concat('sort-direction=desc')
+            .concat('&')
+            .concat(queryParams.join('&'))
+    )
         .then(
             (response) => {
                 response.json()
                 .then(
                     (value) => {
+                        setIsLoading(false)
+
                         if (response.ok) {
                             setData(
                                 value
                             )
 
                         } else {
+                            if (Array.isArray(value.message)) value.message = value.message.join(', ')
                             setError(value.message)
                         }
                     }
@@ -43,18 +56,29 @@ export default function page({ appTitle }) {
 
     useEffect(
         () => {
-            fetch(process.env.NEXT_PUBLIC_API_URL)
+            fetch(
+                (process.env.NEXT_PUBLIC_API_URL)
+                .concat('?')
+                .concat('length=50')
+                .concat('&')
+                .concat('sort-by=_id')
+                .concat('&')
+                .concat('sort-direction=desc')
+            )
             .then(
                 (response) => {
                     response.json()
                     .then(
                         (value) => {
+                            setIsLoading(false)
+
                             if (response.ok) {
                                 setData(
                                     value
                                 )
     
                             } else {
+                                if (Array.isArray(value.message)) value.message = value.message.join(', ')
                                 setError(value.message)
                             }
                         }
@@ -69,13 +93,6 @@ export default function page({ appTitle }) {
         <>
             <Head children={<title>{appTitle}</title>} />
             <main className='px-2 mb-12'>
-                {
-                    Boolean(error) && (
-                        <div className='mb-4'>
-                            <p className='text-red-800 text-center text-lg'>{error}</p>
-                        </div>
-                    )
-                }
                 <div className='mb-4 h-12'>
                     <button className='bg-blue-500 hover:bg-blue-700 border text-white py-1 px-2 rounded float-right'>
                         <Link href='/upload'>Upload</Link>
@@ -85,14 +102,14 @@ export default function page({ appTitle }) {
                     <form onSubmit={getData}>
                         <div className='flex gap-4'>
                             <div className='grow'>
-                                <input className='w-full h-8 border px-1 py-0.5 mb-2 leading-tight focus:outline-none' name='enodeb-id' type='number' autoComplete='off' placeholder='Enodeb ID' />
+                                <input className='w-full border my-2 px-2 py-1.5 leading-tight focus:outline-none' name='enodeb-id' type='number' autoComplete='off' placeholder='Enodeb ID' />
                                 <br />
-                                <input className='w-full h-8 border px-1 py-0.5 leading-tight focus:outline-none' name='cell-id' type='number' autoComplete='off' placeholder='Cell ID' />
+                                <input className='w-full border mt-1.5 mb-2 px-2 py-1.5 leading-tight focus:outline-none' name='cell-id' type='number' autoComplete='off' placeholder='Cell ID' />
                             </div>
                             <div className='grow'>
-                                <input className='w-full h-8 border px-1 py-0.5 mb-2 leading-tight focus:outline-none' name='start-date' type='date' autoComplete='off' placeholder='Start Date' />
+                                <input className='w-full border my-2 px-2 py-1 leading-tight focus:outline-none' name='start-date' type='date' autoComplete='off' placeholder='Start Date' />
                                 <br />
-                                <input className='w-full h-8 border px-1 py-0.5 leading-tight focus:outline-none' name='end-date' type='date' autoComplete='off' placeholder='End Date' />
+                                <input className='w-full border mt-2.5 mb-2 px-2 py-1 leading-tight focus:outline-none' name='end-date' type='date' autoComplete='off' placeholder='End Date' />
                             </div>
                             <div className='self-center w-20 text-center'>
                                 <button className='bg-white hover:bg-transparent text-lg border-2 py-1 px-2 rounded' type='submit'>&#128269;</button>
@@ -100,6 +117,18 @@ export default function page({ appTitle }) {
                         </div>
                     </form>
                 </div>
+                {
+                    Boolean(error) && (
+                        <div className='my-4' role='alert'>
+                            <div className='bg-red-500 rounded-t px-4 py-2'>
+                                <h3 className='text-white font-bold'>Error</h3>
+                            </div>
+                            <div className='border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700'>
+                                <p>{error}</p>
+                            </div>
+                        </div>
+                        )
+                }
                 <div className='py-2'>
                     <table className='table-auto border-collapse border w-full'>
                         <thead>
@@ -112,21 +141,27 @@ export default function page({ appTitle }) {
                         </thead>
                         <tbody>
                             {
-                                data.length ? (
-                                    data.map(
-                                        (value, key) => (
-                                            <tr key={key}>
-                                                <td className='border px-1 text-center'>{value.enodeb_id}</td>
-                                                <td className='border px-1 text-center'>{value.cell_id}</td>
-                                                <td className='border px-1 text-center'>{value.result_time}</td>
-                                                <td className='border px-1 text-end'>{value.availability}</td>
-                                            </tr>
-                                        )
-                                    )
-                                ) : (
+                                isLoading ? (
                                     <tr>
-                                        <td className='border text-center' colSpan={4}>No data</td>
+                                        <td className='border text-center' colSpan={4}>Loading...</td>
                                     </tr>
+                                ) : (
+                                    data.length ? (
+                                        data.map(
+                                            (value, key) => (
+                                                <tr key={key}>
+                                                    <td className='border px-1 text-center'>{value.enodeb_id}</td>
+                                                    <td className='border px-1 text-center'>{value.cell_id}</td>
+                                                    <td className='border px-1 text-center'>{value.result_time}</td>
+                                                    <td className='border px-1 text-end'>{value.availability}</td>
+                                                </tr>
+                                            )
+                                        )
+                                    ) : (
+                                        <tr>
+                                            <td className='border text-center' colSpan={4}>No data</td>
+                                        </tr>
+                                    )    
                                 )
                             }
                         </tbody>
