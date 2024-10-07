@@ -43,7 +43,7 @@ export default function upload({ appTitle }) {
     return (
         <>
             <Head children={<title>Upload - {appTitle}</title>} />
-            <main className='px-2 mb-12'>
+            <main className='grow px-2 mb-12'>
                 <div className='mb-10'>
                     <h1 className='text-xl font-semibold'>Upload Page</h1>
                 </div>

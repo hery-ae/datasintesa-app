@@ -92,7 +92,7 @@ export default function page({ appTitle }) {
     return (
         <>
             <Head children={<title>{appTitle}</title>} />
-            <main className='px-2 mb-12'>
+            <main className='grow px-2 mb-12'>
                 <div className='mb-4 h-12'>
                     <button className='bg-blue-500 hover:bg-blue-700 border text-white py-1 px-2 rounded float-right'>
                         <Link href='/upload'>Upload</Link>
