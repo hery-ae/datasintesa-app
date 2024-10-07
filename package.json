@@ -1,0 +1,22 @@
+{
+    "name": "datasintesa-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "UNLICENSED",
+    "dependencies": {
+        "next": "^11.1.4"
+    },
+    "devDependencies": {
+        "@types/react": "16.9.17",
+        "@types/react-dom": "16.9.4",
+        "tailwindcss": "^3.4.10",
+        "typescript": "^5.4.5"
+    }
+}
