@@ -85,14 +85,14 @@ export default function page({ appTitle }) {
                     <form onSubmit={getData}>
                         <div className='flex gap-4'>
                             <div className='grow'>
-                                <input className='w-full border px-1 py-0.5 mb-2 leading-tight focus:outline-none' name='enodeb-id' type='number' autoComplete='off' placeholder='Enodeb ID' />
+                                <input className='w-full h-8 border px-1 py-0.5 mb-2 leading-tight focus:outline-none' name='enodeb-id' type='number' autoComplete='off' placeholder='Enodeb ID' />
                                 <br />
-                                <input className='w-full border px-1 py-0.5 leading-tight focus:outline-none' name='cell-id' type='number' autoComplete='off' placeholder='Cell ID' />
+                                <input className='w-full h-8 border px-1 py-0.5 leading-tight focus:outline-none' name='cell-id' type='number' autoComplete='off' placeholder='Cell ID' />
                             </div>
                             <div className='grow'>
-                                <input className='w-full border px-1 py-0.5 mb-2 leading-tight focus:outline-none' name='start-date' type='date' autoComplete='off' placeholder='Start Date' />
+                                <input className='w-full h-8 border px-1 py-0.5 mb-2 leading-tight focus:outline-none' name='start-date' type='date' autoComplete='off' placeholder='Start Date' />
                                 <br />
-                                <input className='w-full border px-1 py-0.5 leading-tight focus:outline-none' name='end-date' type='date' autoComplete='off' placeholder='End Date' />
+                                <input className='w-full h-8 border px-1 py-0.5 leading-tight focus:outline-none' name='end-date' type='date' autoComplete='off' placeholder='End Date' />
                             </div>
                             <div className='self-center w-20 text-center'>
                                 <button className='bg-white hover:bg-transparent text-lg border-2 py-1 px-2 rounded' type='submit'>&#128269;</button>
